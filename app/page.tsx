@@ -62,7 +62,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-14 grid gap-px overflow-hidden rounded-3xl bg-indigo-900/10 md:grid-cols-5">
-            <div className="group col-span-3 bg-cream p-10 transition-colors duration-500" style={{ transitionTimingFunction: "var(--ease-out-expo)" }}>
+            <div className="group col-span-3 bg-cream p-10">
               <p className="text-sm font-semibold text-coral-600">Ages 4–7</p>
               <h3 className="mt-2 text-2xl">Little Coders</h3>
               <p className="mt-4 max-w-md leading-relaxed text-indigo-900/70">
@@ -77,12 +77,12 @@ export default function HomePage() {
               </ul>
               <Link
                 href="/programs/little-coders"
-                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-900 underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-300 group-hover:translate-x-1"
+                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-900 underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-200 ease-out group-hover:translate-x-1"
               >
                 Explore Little Coders
               </Link>
             </div>
-            <div className="group col-span-2 bg-indigo-900 p-10 text-cream transition-colors duration-500" style={{ transitionTimingFunction: "var(--ease-out-expo)" }}>
+            <div className="group col-span-2 bg-indigo-900 p-10 text-cream">
               <p className="text-sm font-semibold text-coral">Ages 7–12</p>
               <h3 className="mt-2 text-2xl">Young Coders</h3>
               <p className="mt-4 leading-relaxed text-cream/70">
@@ -91,7 +91,7 @@ export default function HomePage() {
               </p>
               <Link
                 href="/programs/young-coders"
-                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-cream underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-300 group-hover:translate-x-1"
+                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-cream underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-200 ease-out group-hover:translate-x-1"
               >
                 Explore Young Coders
               </Link>
@@ -150,10 +150,7 @@ export default function HomePage() {
 /** A concrete illustration of the subject: snap-together blocks assembling into a tiny game. */
 function BlockToGame() {
   return (
-    <div
-      className="relative rounded-3xl bg-indigo-900 p-8 text-cream shadow-[0_30px_60px_-20px_rgba(32,21,72,0.5)] transition-transform duration-500"
-      style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
-    >
+    <div className="relative rounded-3xl bg-indigo-900 p-8 text-cream shadow-[0_30px_60px_-20px_rgba(32,21,72,0.5)]">
       <p className="font-mono text-xs text-cream/50">today's lesson</p>
       <div className="mt-4 space-y-2">
         {[

@@ -5,7 +5,10 @@
 :root {
   --ink: #201548;
   --coral: #ff6b6b;
-  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Named per emil-design-eng: stronger than the built-in CSS easings, which
+     are too weak to feel intentional. */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 }
 
 body {
@@ -21,44 +24,47 @@ code, pre, .mono {
 }
 
 /* Every interactive element gets the same felt response: a quick, slightly
-   overshooting ease on hover, and a tactile compress on press. This is the
-   single biggest thing separating "designed" from "generated". */
+   overshooting ease on hover, and a tactile compress on press. Hover is
+   gated to devices that actually have hover (mouse/trackpad) — ungated
+   hover on touch (iPad) gets "stuck" after a tap until the user taps
+   elsewhere, which reads as a bug. */
 .btn-primary {
   @apply inline-flex items-center justify-center gap-2 rounded-full bg-indigo-900 px-7 py-3.5 font-heading text-[15px] font-semibold text-cream;
-  transition: transform 0.35s var(--ease-out-expo), background-color 0.25s ease, box-shadow 0.35s var(--ease-out-expo);
+  transition: transform 180ms var(--ease-out), background-color 180ms ease, box-shadow 180ms var(--ease-out);
   box-shadow: 0 1px 2px rgba(32, 21, 72, 0.08);
 }
-.btn-primary:hover {
-  @apply bg-indigo-700;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 24px -8px rgba(32, 21, 72, 0.45);
-}
-.btn-primary:active {
-  transform: translateY(0) scale(0.97);
-  transition-duration: 0.12s;
-}
-
 .btn-secondary {
   @apply inline-flex items-center justify-center gap-2 rounded-full border border-indigo-900/20 bg-transparent px-7 py-3.5 font-heading text-[15px] font-semibold text-indigo-900;
-  transition: transform 0.35s var(--ease-out-expo), border-color 0.25s ease, background-color 0.25s ease;
+  transition: transform 180ms var(--ease-out), border-color 180ms ease, background-color 180ms ease;
 }
-.btn-secondary:hover {
-  @apply border-indigo-900/40 bg-indigo-900/5;
-  transform: translateY(-2px);
-}
-.btn-secondary:active {
-  transform: translateY(0) scale(0.97);
-  transition-duration: 0.12s;
-}
-
 .card {
   @apply rounded-2xl border border-indigo-900/10 bg-white p-6;
-  transition: transform 0.4s var(--ease-out-expo), box-shadow 0.4s var(--ease-out-expo), border-color 0.25s ease;
+  transition: transform 220ms var(--ease-out), box-shadow 220ms var(--ease-out), border-color 180ms ease;
 }
-.card.liftable:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 40px -16px rgba(32, 21, 72, 0.25);
-  border-color: rgba(32, 21, 72, 0.18);
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover {
+    @apply bg-indigo-700;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -8px rgba(32, 21, 72, 0.45);
+  }
+  .btn-secondary:hover {
+    @apply border-indigo-900/40 bg-indigo-900/5;
+    transform: translateY(-2px);
+  }
+  .card.liftable:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px -16px rgba(32, 21, 72, 0.25);
+    border-color: rgba(32, 21, 72, 0.18);
+  }
+}
+
+/* Press feedback fires on every pointer type — this is the one state that
+   should always respond, touch included. 100-160ms, per the duration table. */
+.btn-primary:active,
+.btn-secondary:active {
+  transform: translateY(0) scale(0.97);
+  transition-duration: 120ms;
 }
 
 .underline-mark {
@@ -75,19 +81,22 @@ code, pre, .mono {
 .underline-mark svg path {
   stroke-dasharray: 340;
   stroke-dashoffset: 340;
-  animation: draw-underline 0.9s var(--ease-out-expo) 0.5s forwards;
+  animation: draw-underline 0.9s var(--ease-out) 0.5s forwards;
 }
 
 @keyframes draw-underline {
   to { stroke-dashoffset: 0; }
 }
 
+/* Marketing/first-view entrance — occasional, so a longer duration (700ms)
+   is appropriate per the animation decision framework. Never from scale(0):
+   this moves in from a visible offset, not out of nowhere. */
 @keyframes rise-in {
   from { opacity: 0; transform: translateY(14px); }
   to { opacity: 1; transform: translateY(0); }
 }
 .rise-in {
-  animation: rise-in 0.7s var(--ease-out-expo) both;
+  animation: rise-in 0.7s var(--ease-out) both;
 }
 
 @keyframes drift {
@@ -95,7 +104,7 @@ code, pre, .mono {
   50% { transform: translate(-14px, 10px) scale(1.04); }
 }
 .drift {
-  animation: drift 10s ease-in-out infinite;
+  animation: drift 10s var(--ease-in-out) infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {
