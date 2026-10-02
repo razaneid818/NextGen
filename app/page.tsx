@@ -4,10 +4,21 @@ export default function HomePage() {
   return (
     <>
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 pb-20 pt-14 md:pt-20">
-        <div className="grid items-center gap-16 md:grid-cols-[1.1fr_1fr]">
+      <section className="relative overflow-hidden px-6 pb-20 pt-14 md:pt-20">
+        <div
+          className="drift pointer-events-none absolute -right-24 -top-24 h-[420px] w-[420px] rounded-full opacity-40 blur-3xl"
+          style={{ background: "radial-gradient(circle, #FF6B6B 0%, transparent 70%)" }}
+          aria-hidden="true"
+        />
+        <div
+          className="drift pointer-events-none absolute -left-32 top-40 h-[360px] w-[360px] rounded-full opacity-30 blur-3xl"
+          style={{ background: "radial-gradient(circle, #4F39A7 0%, transparent 70%)", animationDelay: "-4s" }}
+          aria-hidden="true"
+        />
+
+        <div className="relative mx-auto grid max-w-6xl items-center gap-16 md:grid-cols-[1.1fr_1fr]">
           <div>
-            <h1 className="text-[2.75rem] leading-[1.05] md:text-[3.75rem]">
+            <h1 className="rise-in text-[2.75rem] leading-[1.05] md:text-[3.75rem]">
               Turn screen time into
               <br />
               <span className="underline-mark">
@@ -23,11 +34,11 @@ export default function HomePage() {
                 </svg>
               </span>
             </h1>
-            <p className="mt-7 max-w-md text-lg leading-relaxed text-indigo-900/70">
+            <p className="rise-in mt-7 max-w-md text-lg leading-relaxed text-indigo-900/70" style={{ animationDelay: "0.1s" }}>
               Private, 1-on-1 online coding lessons for kids ages 4–12 in Lebanon.
               One child. One tutor. One personalized learning journey.
             </p>
-            <div className="mt-9 flex flex-wrap gap-4">
+            <div className="rise-in mt-9 flex flex-wrap gap-4" style={{ animationDelay: "0.2s" }}>
               <Link href="/book-discovery" className="btn-primary">
                 Book a free discovery session
               </Link>
@@ -37,7 +48,9 @@ export default function HomePage() {
             </div>
           </div>
 
-          <BlockToGame />
+          <div className="rise-in" style={{ animationDelay: "0.15s" }}>
+            <BlockToGame />
+          </div>
         </div>
       </section>
 
@@ -49,7 +62,7 @@ export default function HomePage() {
           </div>
 
           <div className="mt-14 grid gap-px overflow-hidden rounded-3xl bg-indigo-900/10 md:grid-cols-5">
-            <div className="col-span-3 bg-cream p-10">
+            <div className="group col-span-3 bg-cream p-10 transition-colors duration-500" style={{ transitionTimingFunction: "var(--ease-out-expo)" }}>
               <p className="text-sm font-semibold text-coral-600">Ages 4–7</p>
               <h3 className="mt-2 text-2xl">Little Coders</h3>
               <p className="mt-4 max-w-md leading-relaxed text-indigo-900/70">
@@ -62,18 +75,24 @@ export default function HomePage() {
                 <li>Beginner block-based coding</li>
                 <li>Simple animations &amp; interactive stories</li>
               </ul>
-              <Link href="/programs/little-coders" className="mt-7 inline-block text-sm font-semibold text-indigo-900 underline decoration-coral decoration-2 underline-offset-4">
+              <Link
+                href="/programs/little-coders"
+                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-indigo-900 underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-300 group-hover:translate-x-1"
+              >
                 Explore Little Coders
               </Link>
             </div>
-            <div className="col-span-2 bg-indigo-900 p-10 text-cream">
+            <div className="group col-span-2 bg-indigo-900 p-10 text-cream transition-colors duration-500" style={{ transitionTimingFunction: "var(--ease-out-expo)" }}>
               <p className="text-sm font-semibold text-coral">Ages 7–12</p>
               <h3 className="mt-2 text-2xl">Young Coders</h3>
               <p className="mt-4 leading-relaxed text-cream/70">
                 Real projects: Scratch, Roblox Studio, beginner Python, websites, and
                 introductory AI — built one-on-one, at their pace.
               </p>
-              <Link href="/programs/young-coders" className="mt-7 inline-block text-sm font-semibold text-cream underline decoration-coral decoration-2 underline-offset-4">
+              <Link
+                href="/programs/young-coders"
+                className="mt-7 inline-flex items-center gap-1.5 text-sm font-semibold text-cream underline decoration-coral decoration-2 underline-offset-4 transition-transform duration-300 group-hover:translate-x-1"
+              >
                 Explore Young Coders
               </Link>
             </div>
@@ -131,18 +150,21 @@ export default function HomePage() {
 /** A concrete illustration of the subject: snap-together blocks assembling into a tiny game. */
 function BlockToGame() {
   return (
-    <div className="relative rounded-3xl bg-indigo-900 p-8 text-cream">
+    <div
+      className="relative rounded-3xl bg-indigo-900 p-8 text-cream shadow-[0_30px_60px_-20px_rgba(32,21,72,0.5)] transition-transform duration-500"
+      style={{ transitionTimingFunction: "var(--ease-out-expo)" }}
+    >
       <p className="font-mono text-xs text-cream/50">today's lesson</p>
       <div className="mt-4 space-y-2">
         {[
           ["#6C5CE7", "when ⚑ clicked"],
           ["#FF6B6B", "move 10 steps"],
           ["#2ECC71", "if on edge, bounce"],
-        ].map(([color, text]) => (
+        ].map(([color, text], i) => (
           <div
             key={text}
-            className="rounded-lg px-4 py-2.5 font-mono text-sm text-white shadow-sm"
-            style={{ backgroundColor: color }}
+            className="rise-in rounded-lg px-4 py-2.5 font-mono text-sm text-white shadow-sm"
+            style={{ backgroundColor: color, animationDelay: `${0.4 + i * 0.1}s` }}
           >
             {text}
           </div>
@@ -158,7 +180,13 @@ function BlockToGame() {
       <div className="relative mt-6 h-32 overflow-hidden rounded-xl bg-indigo-700/60">
         <svg viewBox="0 0 280 110" className="absolute inset-0 h-full w-full" aria-hidden="true">
           <path d="M20 90 Q 100 20, 180 55 T 260 25" fill="none" stroke="#FF6B6B" strokeWidth="2" strokeDasharray="4 6" opacity="0.6" />
-          <circle cx="260" cy="25" r="7" fill="#FF6B6B" />
+          <circle cx="260" cy="25" r="7" fill="#FF6B6B">
+            <animateMotion
+              dur="3.5s"
+              repeatCount="indefinite"
+              path="M20 90 Q 100 20, 180 55 T 260 25 Q 180 55, 100 20 T 20 90"
+            />
+          </circle>
         </svg>
         <p className="absolute bottom-3 left-4 font-mono text-[11px] text-cream/50">sprite_bounce.sb3</p>
       </div>

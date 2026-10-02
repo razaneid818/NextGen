@@ -25,7 +25,7 @@ export default async function TutorsPage() {
       ) : (
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {tutors.map((t) => (
-            <div key={t.id} className="card">
+            <div key={t.id} className="card liftable">
               <h3 className="font-heading text-lg font-bold">{t.user.name}</h3>
               <p className="mt-2 text-sm text-gray-600">{t.bio}</p>
               <p className="mt-3 flex flex-wrap gap-1 text-xs">
