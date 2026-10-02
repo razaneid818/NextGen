@@ -1,101 +1,167 @@
 import Link from "next/link";
 
-const outcomes = [
-  "Problem-solving skills",
-  "Logical thinking",
-  "Creativity",
-  "Confidence",
-  "Patience",
-  "Digital literacy",
-  "Independent thinking",
-  "Future-ready tech skills",
-];
-
 export default function HomePage() {
   return (
     <>
-      <section className="mx-auto max-w-6xl px-6 py-20">
-        <div className="grid items-center gap-12 md:grid-cols-2">
+      {/* Hero */}
+      <section className="mx-auto max-w-6xl px-6 pb-20 pt-14 md:pt-20">
+        <div className="grid items-center gap-16 md:grid-cols-[1.1fr_1fr]">
           <div>
-            <h1 className="text-4xl font-bold leading-tight text-navy-900 md:text-5xl">
-              Turn Screen Time Into <span className="text-coral">Skill Time.</span>
+            <h1 className="text-[2.75rem] leading-[1.05] md:text-[3.75rem]">
+              Turn screen time into
+              <br />
+              <span className="underline-mark">
+                skill time.
+                <svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true">
+                  <path
+                    d="M2 14 C 60 4, 120 18, 180 10 S 260 4, 298 12"
+                    fill="none"
+                    stroke="#FF6B6B"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </span>
             </h1>
-            <p className="mt-6 text-lg text-gray-600">
-              Personalized 1-on-1 online coding lessons for kids ages 4–12 in Lebanon.
+            <p className="mt-7 max-w-md text-lg leading-relaxed text-indigo-900/70">
+              Private, 1-on-1 online coding lessons for kids ages 4–12 in Lebanon.
               One child. One tutor. One personalized learning journey.
             </p>
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-9 flex flex-wrap gap-4">
               <Link href="/book-discovery" className="btn-primary">
-                Book a Free Discovery Session
+                Book a free discovery session
               </Link>
               <Link href="/programs" className="btn-secondary">
-                Explore Programs
+                See the programs
               </Link>
             </div>
           </div>
-          <div className="card bg-indigo-50">
-            <h3 className="text-xl font-bold text-indigo">What your child gains</h3>
-            <ul className="mt-4 grid grid-cols-2 gap-3 text-sm text-gray-700">
-              {outcomes.map((o) => (
-                <li key={o} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-coral" /> {o}
-                </li>
-              ))}
-            </ul>
-          </div>
+
+          <BlockToGame />
         </div>
       </section>
 
-      <section className="bg-indigo-50 py-20">
+      {/* Programs — asymmetric, not matched cards */}
+      <section className="border-y border-indigo-900/10 bg-sand py-24">
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="text-center text-3xl font-bold text-navy-900">
-            Two learning paths, one personalized journey
-          </h2>
-          <div className="mt-10 grid gap-8 md:grid-cols-2">
-            <div className="card">
-              <h3 className="text-xl font-bold text-indigo">Little Coders — Ages 4–7</h3>
-              <p className="mt-3 text-gray-600">
-                A playful introduction to coding: logic, sequencing, patterns, digital
-                creativity, stories, animations, and beginner game concepts — in short,
-                highly interactive lessons built for young attention spans.
+          <div className="max-w-xl">
+            <h2 className="text-3xl md:text-[2.25rem]">Two paths, matched to how kids actually learn at that age</h2>
+          </div>
+
+          <div className="mt-14 grid gap-px overflow-hidden rounded-3xl bg-indigo-900/10 md:grid-cols-5">
+            <div className="col-span-3 bg-cream p-10">
+              <p className="text-sm font-semibold text-coral-600">Ages 4–7</p>
+              <h3 className="mt-2 text-2xl">Little Coders</h3>
+              <p className="mt-4 max-w-md leading-relaxed text-indigo-900/70">
+                No reading required to get started. Lessons are short, playful, and built
+                around sequencing, patterns, and stories — the same logic as real code,
+                taught through games a four-year-old already loves.
               </p>
-              <Link href="/programs/little-coders" className="mt-4 inline-block font-semibold text-indigo">
-                Learn more →
+              <ul className="mt-6 space-y-2 text-sm text-indigo-900/70">
+                <li>Sequencing &amp; patterns through play</li>
+                <li>Beginner block-based coding</li>
+                <li>Simple animations &amp; interactive stories</li>
+              </ul>
+              <Link href="/programs/little-coders" className="mt-7 inline-block text-sm font-semibold text-indigo-900 underline decoration-coral decoration-2 underline-offset-4">
+                Explore Little Coders
               </Link>
             </div>
-            <div className="card">
-              <h3 className="text-xl font-bold text-indigo">Young Coders — Ages 7–12</h3>
-              <p className="mt-3 text-gray-600">
-                Real digital projects: Scratch, Roblox Studio, beginner Python, game
-                development, websites, coding logic, and introductory AI concepts.
+            <div className="col-span-2 bg-indigo-900 p-10 text-cream">
+              <p className="text-sm font-semibold text-coral">Ages 7–12</p>
+              <h3 className="mt-2 text-2xl">Young Coders</h3>
+              <p className="mt-4 leading-relaxed text-cream/70">
+                Real projects: Scratch, Roblox Studio, beginner Python, websites, and
+                introductory AI — built one-on-one, at their pace.
               </p>
-              <Link href="/programs/young-coders" className="mt-4 inline-block font-semibold text-indigo">
-                Learn more →
+              <Link href="/programs/young-coders" className="mt-7 inline-block text-sm font-semibold text-cream underline decoration-coral decoration-2 underline-offset-4">
+                Explore Young Coders
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-20 text-center">
-        <h2 className="text-3xl font-bold text-navy-900">How it works</h2>
-        <div className="mt-10 grid gap-8 md:grid-cols-4">
+      {/* How it works — a real sequence, so numbering earns its place */}
+      <section className="mx-auto max-w-6xl px-6 py-24">
+        <h2 className="max-w-lg text-3xl md:text-[2.25rem]">From first session to finished project</h2>
+        <div className="mt-14 grid gap-10 md:grid-cols-4">
           {[
-            ["1", "Free Discovery Session", "We assess your child's interests, comfort with tech, and learning level."],
-            ["2", "Matched with a Tutor", "Choose from our vetted, admin-approved coding tutors."],
-            ["3", "1-on-1 Live Lessons", "Weekly personalized lessons, fully adapted to your child's pace."],
-            ["4", "Progress You Can See", "Clear updates on skills learned and projects completed."],
+            ["01", "Free discovery session", "We assess your child's interests, comfort with tech, and learning level — no cost, no pressure."],
+            ["02", "Matched with a tutor", "Choose from vetted, personally approved coding tutors suited to your child's age and goals."],
+            ["03", "Weekly 1-on-1 lessons", "Live, personalized lessons that adapt to your child's pace — not a fixed curriculum."],
+            ["04", "Progress you can see", "Clear updates on skills learned, projects finished, and what's next."],
           ].map(([num, title, body]) => (
-            <div key={num}>
-              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-coral font-heading text-xl font-bold text-white">
-                {num}
-              </div>
-              <h3 className="mt-4 font-heading font-bold">{title}</h3>
-              <p className="mt-2 text-sm text-gray-600">{body}</p>
+            <div key={num} className="border-t-2 border-indigo-900/15 pt-5">
+              <span className="font-mono text-sm text-coral-600">{num}</span>
+              <h3 className="mt-3 text-lg font-semibold text-indigo-900">{title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-indigo-900/60">{body}</p>
             </div>
           ))}
         </div>
       </section>
+
+      {/* Outcomes */}
+      <section className="bg-indigo-900 py-24 text-cream">
+        <div className="mx-auto max-w-6xl px-6">
+          <h2 className="max-w-lg text-3xl text-cream md:text-[2.25rem]">
+            Coding is the medium. The real lesson is bigger.
+          </h2>
+          <div className="mt-12 grid grid-cols-2 gap-x-8 gap-y-5 md:grid-cols-4">
+            {[
+              "Problem-solving",
+              "Logical thinking",
+              "Creativity",
+              "Confidence",
+              "Patience",
+              "Digital literacy",
+              "Independent thinking",
+              "Future-ready skills",
+            ].map((o) => (
+              <p key={o} className="border-l-2 border-coral pl-4 text-sm text-cream/80">
+                {o}
+              </p>
+            ))}
+          </div>
+        </div>
+      </section>
     </>
+  );
+}
+
+/** A concrete illustration of the subject: snap-together blocks assembling into a tiny game. */
+function BlockToGame() {
+  return (
+    <div className="relative rounded-3xl bg-indigo-900 p-8 text-cream">
+      <p className="font-mono text-xs text-cream/50">today's lesson</p>
+      <div className="mt-4 space-y-2">
+        {[
+          ["#6C5CE7", "when ⚑ clicked"],
+          ["#FF6B6B", "move 10 steps"],
+          ["#2ECC71", "if on edge, bounce"],
+        ].map(([color, text]) => (
+          <div
+            key={text}
+            className="rounded-lg px-4 py-2.5 font-mono text-sm text-white shadow-sm"
+            style={{ backgroundColor: color }}
+          >
+            {text}
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-6 flex items-center gap-3 text-cream/40">
+        <span className="h-px flex-1 bg-cream/15" />
+        <span className="text-xs">becomes</span>
+        <span className="h-px flex-1 bg-cream/15" />
+      </div>
+
+      <div className="relative mt-6 h-32 overflow-hidden rounded-xl bg-indigo-700/60">
+        <svg viewBox="0 0 280 110" className="absolute inset-0 h-full w-full" aria-hidden="true">
+          <path d="M20 90 Q 100 20, 180 55 T 260 25" fill="none" stroke="#FF6B6B" strokeWidth="2" strokeDasharray="4 6" opacity="0.6" />
+          <circle cx="260" cy="25" r="7" fill="#FF6B6B" />
+        </svg>
+        <p className="absolute bottom-3 left-4 font-mono text-[11px] text-cream/50">sprite_bounce.sb3</p>
+      </div>
+    </div>
   );
 }

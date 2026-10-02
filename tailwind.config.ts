@@ -12,9 +12,11 @@ const config: Config = {
           DEFAULT: "#4F39A7",
           50: "#F2EEFB",
           100: "#E3DBF6",
+          200: "#C7B9EC",
           500: "#4F39A7",
           600: "#3E2C89",
           700: "#2F2168",
+          900: "#201548",
         },
         coral: {
           DEFAULT: "#FF6B6B",
@@ -27,6 +29,8 @@ const config: Config = {
           DEFAULT: "#1B1E3C",
           900: "#12142B",
         },
+        cream: "#FBF8F3",
+        sand: "#F3EDE3",
       },
       fontFamily: {
         heading: ["Plus Jakarta Sans", "sans-serif"],
