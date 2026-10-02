@@ -1,0 +1,279 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Users & roles
+// ---------------------------------------------------------------------------
+
+enum Role {
+  PARENT
+  TUTOR
+  ADMIN
+}
+
+model User {
+  id            String   @id @default(cuid())
+  email         String   @unique
+  passwordHash  String
+  name          String
+  role          Role
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  parentProfile ParentProfile?
+  tutorProfile  TutorProfile?
+
+  notifications Notification[]
+
+  @@index([role])
+}
+
+model ParentProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phone     String?
+  country   String   @default("LB")
+
+  children  Child[]
+  bookings  Booking[]
+  reviews   Review[]
+}
+
+enum TutorStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum AgeGroup {
+  LITTLE_4_7
+  YOUNG_7_12
+}
+
+model TutorProfile {
+  id               String      @id @default(cuid())
+  userId           String      @unique
+  user             User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status           TutorStatus @default(PENDING)
+  bio              String?
+  subjects         String[]    // e.g. ["Scratch", "Python", "Roblox Studio"]
+  ageGroups        AgeGroup[]
+  hourlyRateUSD    Decimal     @db.Decimal(10, 2)
+  videoIntroUrl    String?
+  appliedAt        DateTime    @default(now())
+  reviewedAt       DateTime?
+  reviewedByUserId String?
+
+  availabilities   Availability[]
+  bookings         Booking[]
+  ledgerEntries    LedgerEntry[]
+  payouts          Payout[]
+  reviews          Review[]
+  progressNotes    ProgressNote[]
+
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Children
+// ---------------------------------------------------------------------------
+
+model Child {
+  id        String   @id @default(cuid())
+  parentId  String
+  parent    ParentProfile @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  firstName String
+  ageGroup  AgeGroup
+  notes     String?
+  createdAt DateTime @default(now())
+
+  bookings      Booking[]
+  progressNotes ProgressNote[]
+}
+
+// ---------------------------------------------------------------------------
+// Availability & bookings
+// ---------------------------------------------------------------------------
+
+model Availability {
+  id        String   @id @default(cuid())
+  tutorId   String
+  tutor     TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      // 0 = Sunday ... 6 = Saturday
+  startTime String   // "16:00" (24h, tutor's local timezone)
+  endTime   String   // "17:00"
+  timezone  String   @default("Asia/Beirut")
+
+  @@index([tutorId])
+}
+
+enum BookingType {
+  DISCOVERY
+  PAID
+}
+
+enum BookingStatus {
+  REQUESTED
+  CONFIRMED
+  AWAITING_PAYMENT
+  AWAITING_ACTIVATION
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+model Booking {
+  id             String        @id @default(cuid())
+  parentId       String
+  parent         ParentProfile @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  childId        String
+  child          Child         @relation(fields: [childId], references: [id], onDelete: Cascade)
+  tutorId        String
+  tutor          TutorProfile  @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  type           BookingType
+  scheduledStart DateTime
+  scheduledEnd   DateTime
+  status         BookingStatus @default(REQUESTED)
+  priceUSD       Decimal       @db.Decimal(10, 2) @default(0)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  payment           Payment?
+  sessionActivation SessionActivation?
+  ledgerEntry       LedgerEntry?
+  progressNote      ProgressNote?
+  review            Review?
+
+  @@index([parentId])
+  @@index([tutorId])
+  @@index([status])
+}
+
+// ---------------------------------------------------------------------------
+// Payments & ledger
+// ---------------------------------------------------------------------------
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model Payment {
+  id          String        @id @default(cuid())
+  bookingId   String        @unique
+  booking     Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  provider    String        @default("whish")
+  providerRef String?
+  amountUSD   Decimal       @db.Decimal(10, 2)
+  status      PaymentStatus @default(PENDING)
+  rawPayload  Json?
+  createdAt   DateTime      @default(now())
+  confirmedAt DateTime?
+
+  @@index([status])
+}
+
+model SessionActivation {
+  id               String   @id @default(cuid())
+  bookingId        String   @unique
+  booking          Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  activatedByUserId String
+  activatedAt      DateTime @default(now())
+  videoRoomName    String
+  videoRoomUrl     String
+}
+
+model LedgerEntry {
+  id               String       @id @default(cuid())
+  bookingId        String       @unique
+  booking          Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  tutorId          String
+  tutor            TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  grossUSD         Decimal      @db.Decimal(10, 2)
+  platformFeeUSD   Decimal      @db.Decimal(10, 2)
+  tutorEarningsUSD Decimal      @db.Decimal(10, 2)
+  payoutId         String?
+  payout           Payout?      @relation(fields: [payoutId], references: [id])
+  createdAt        DateTime     @default(now())
+
+  @@index([tutorId])
+  @@index([payoutId])
+}
+
+enum PayoutStatus {
+  PENDING
+  PAID
+}
+
+model Payout {
+  id             String       @id @default(cuid())
+  tutorId        String
+  tutor          TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  amountUSD      Decimal      @db.Decimal(10, 2)
+  method         String?      // e.g. "Bank transfer", "OMT", "Whish transfer"
+  reference      String?
+  status         PayoutStatus @default(PENDING)
+  issuedByUserId String?
+  periodStart    DateTime
+  periodEnd      DateTime
+  createdAt      DateTime     @default(now())
+
+  ledgerEntries  LedgerEntry[]
+
+  @@index([tutorId])
+}
+
+// ---------------------------------------------------------------------------
+// Progress, reviews, notifications
+// ---------------------------------------------------------------------------
+
+model ProgressNote {
+  id           String       @id @default(cuid())
+  bookingId    String       @unique
+  booking      Booking      @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  tutorId      String
+  tutor        TutorProfile @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  childId      String
+  child        Child        @relation(fields: [childId], references: [id], onDelete: Cascade)
+  summary      String
+  skillsCovered String[]
+  projectLink  String?
+  nextSteps    String?
+  createdAt    DateTime     @default(now())
+}
+
+model Review {
+  id        String        @id @default(cuid())
+  bookingId String        @unique
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  parentId  String
+  parent    ParentProfile @relation(fields: [parentId], references: [id], onDelete: Cascade)
+  tutorId   String
+  tutor     TutorProfile  @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  rating    Int           // 1-5
+  comment   String?
+  createdAt DateTime      @default(now())
+
+  @@index([tutorId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      String
+  payload   Json?
+  readAt    DateTime?
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+}
